@@ -23,16 +23,12 @@ public class EventHandler {
     }
 
     public Mono<ServerResponse> getEvents(ServerRequest request){
-        LOG.info("GET: " + request.uri().getPath());
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(service.findAll(), Event.class);
     }
 
     public Mono<ServerResponse> postEvents(ServerRequest request){
-        LOG.info("POST: " + request.uri().getPath());
-        GetEventsCommand getEventsCommand = request.bodyToFlux(GetEventsCommand.class).blockFirst();
-
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(service.findAll(), Event.class);
