@@ -1,4 +1,4 @@
-package com.mypieceofcode.evfinder.config;
+package com.mypieceofcode.evfinder.web;
 
 import com.mypieceofcode.evfinder.domain.User;
 import com.mypieceofcode.evfinder.repository.UserRepository;

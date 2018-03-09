@@ -29,13 +29,14 @@ import reactor.core.publisher.Mono;
 import java.security.Principal;
 
 @Configuration
-@EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
 public class SecurityConfig{
 
 
     @Bean
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http){
        return http
+               .csrf().disable()
                 .authorizeExchange()
                 .pathMatchers("/events", "/users").authenticated()
                 .and().authorizeExchange().anyExchange().permitAll()
@@ -60,7 +61,6 @@ public class SecurityConfig{
     }
 
     private Mono<Void> logoutHandler(WebFilterExchange webFilterExchange, Authentication authentication) {
-        authentication.setAuthenticated(false);
         ServerHttpResponse response = webFilterExchange.getExchange().getResponse();
         response.setStatusCode(HttpStatus.SEE_OTHER);
         response.getHeaders().add(HttpHeaders.LOCATION, "/login");

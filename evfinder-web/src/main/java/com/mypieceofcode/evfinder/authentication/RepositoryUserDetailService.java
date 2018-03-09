@@ -1,4 +1,4 @@
-package com.mypieceofcode.evfinder.repository;
+package com.mypieceofcode.evfinder.authentication;
 
 import com.mypieceofcode.evfinder.domain.User;
 import com.mypieceofcode.evfinder.repository.UserRepository;
@@ -7,14 +7,12 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 
 @Component
 public class RepositoryUserDetailService implements ReactiveUserDetailsService {
-
 
     private final UserRepository repository;
 
@@ -30,7 +28,7 @@ public class RepositoryUserDetailService implements ReactiveUserDetailsService {
 
     static class CustomUserDetail extends User implements UserDetails{
 
-        public CustomUserDetail(User user) {
+         CustomUserDetail(User user) {
             super(user);
         }
 
@@ -58,5 +56,6 @@ public class RepositoryUserDetailService implements ReactiveUserDetailsService {
         public boolean isEnabled() {
             return true;
         }
+
     }
 }
