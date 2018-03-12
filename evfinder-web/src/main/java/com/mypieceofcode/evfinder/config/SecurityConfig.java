@@ -27,7 +27,7 @@ public class SecurityConfig{
        return http
                .csrf().disable()
                 .authorizeExchange()
-                .pathMatchers("/events", "/users").authenticated()
+                .pathMatchers("/events", "/users", "/user/*").authenticated()
                 .and().authorizeExchange().anyExchange().permitAll()
                .and()
                .httpBasic()

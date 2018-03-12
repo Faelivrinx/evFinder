@@ -1,10 +1,8 @@
 package com.mypieceofcode.evfinder.web.handler;
 
-import com.mypieceofcode.evfinder.command.GetEventsCommand;
 import com.mypieceofcode.evfinder.domain.Event;
 import com.mypieceofcode.evfinder.network.request.EventsRequest;
 import com.mypieceofcode.evfinder.service.event.EventRecommendationService;
-import com.sun.jdi.request.EventRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -15,7 +13,6 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class EventHandler {
-
     private static final Logger LOG = LoggerFactory.getLogger(EventHandler.class);
 
     private EventRecommendationService service;

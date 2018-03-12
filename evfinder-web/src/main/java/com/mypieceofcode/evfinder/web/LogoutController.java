@@ -34,11 +34,11 @@ public class LogoutController {
         session.invalidate().block();
     }
 
-
-    @GetMapping("/users")
-    public Flux<User> users(){
-        return repository.findAll();
-    }
+//
+//    @GetMapping("/users")
+//    public Flux<User> users(){
+//        return repository.findAll();
+//    }
 
     @GetMapping("/")
     public Mono<Void> index(ServerWebExchange exchange){
