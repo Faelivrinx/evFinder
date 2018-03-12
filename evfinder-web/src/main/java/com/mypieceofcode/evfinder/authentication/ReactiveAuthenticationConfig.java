@@ -31,15 +31,12 @@ public class ReactiveAuthenticationConfig implements ReactiveAuthenticationManag
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
         return this.delegate.authenticate(authentication)
-                .delayUntil(this::updatePassword);
+                .delayUntil(authentication1 -> updatePassword(authentication));
     }
 
     private Mono<User> updatePassword(Authentication authentication) {
-        String encodeType = factoryType(encoder);
         return this.userRepository.findByUsername(authentication.getName())
-                .publishOn(Schedulers.parallel())
-                    .filter(user -> !user.getPassword().contains(encodeType))
-                    .doOnNext(user -> user.setPassword(
+                .publishOn(Schedulers.parallel()).doOnNext(user -> user.setPassword(
                         this.encoder.encode(authentication.getCredentials().toString())
                     ))
                 .flatMap(this.userRepository::save);
@@ -51,12 +48,5 @@ public class ReactiveAuthenticationConfig implements ReactiveAuthenticationManag
         return result;
     }
 
-    // TODO: 09.03.2018 Need update every spring API change
-    private String factoryType(PasswordEncoder encoder) {
-        if (encoder instanceof BCryptPasswordEncoder) {
-            return BCRYPT;
-        } else {
-            return "";
-        }
-    }
+
 }
