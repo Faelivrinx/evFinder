@@ -1,19 +1,30 @@
 package com.mypieceofcode.evfinder.service.event;
 
-import com.mypieceofcode.evfinder.command.GetEventsCommand;
 import com.mypieceofcode.evfinder.domain.Event;
+import com.mypieceofcode.evfinder.network.request.EventsRequest;
+import com.mypieceofcode.evfinder.recommendation.Recommendation;
+import com.mypieceofcode.evfinder.recommendation.model.ProfileBuilder;
+import com.mypieceofcode.evfinder.recommendation.utils.Const;
 import com.mypieceofcode.evfinder.repository.EventRepository;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.GeoResult;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Random;
 
 @Service
 public class EventService implements EventRecommendationService {
 
     private EventRepository eventRepository;
+    private Recommendation<Event> recommendation;
 
-    public EventService(EventRepository eventRepository) {
+    public EventService(EventRepository eventRepository, Recommendation<Event> recommendation) {
         this.eventRepository = eventRepository;
+        this.recommendation = recommendation;
     }
 
     @Override
@@ -42,9 +53,13 @@ public class EventService implements EventRecommendationService {
     }
 
     @Override
-    public Flux<Event> findLocalEventsWithRecommendation(GetEventsCommand eventsCommand) {
-        // TODO: 28.02.2018 search near events and sort
+    public Flux<Event> findLocalEventsWithRecommendation(EventsRequest eventsCommand) {
+        Flux<GeoResult<Event>> nearEvents = eventRepository.findByLocationNear(
+                new Point(eventsCommand.getCoordinate().getLatitude(), eventsCommand.getCoordinate().getLongitude()),
+                new Distance(10, Metrics.KILOMETERS));
 
-        return null;
+        return recommendation.recommended(eventsCommand,
+                Flux.just(nearEvents).flatMap(geoResultFlux -> geoResultFlux.map(GeoResult::getContent)));
     }
+
 }

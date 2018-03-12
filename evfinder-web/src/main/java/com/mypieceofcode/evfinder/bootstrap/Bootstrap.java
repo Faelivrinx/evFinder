@@ -1,6 +1,10 @@
 package com.mypieceofcode.evfinder.bootstrap;
 
+import com.mypieceofcode.evfinder.domain.Event;
 import com.mypieceofcode.evfinder.domain.User;
+import com.mypieceofcode.evfinder.network.model.Coordinate;
+import com.mypieceofcode.evfinder.recommendation.model.ProfileBuilder;
+import com.mypieceofcode.evfinder.recommendation.utils.Const;
 import com.mypieceofcode.evfinder.repository.UserRepository;
 import com.mypieceofcode.evfinder.service.event.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +65,24 @@ public class Bootstrap implements CommandLineRunner {
                         null,
                         () -> {}
                 );
+
+        Event event_w_gorce = Event.builder()
+                .title("Event w Górce")
+                .coordinate(new Coordinate(49.602314f,19.1039972f))
+                .date(43L)
+                .profile(new ProfileBuilder().builder().setValue(Const.S_FOOTBALL, 6).build().getProfile())
+                .build();
+        Event event_w_ciscu = Event.builder()
+                .title("Event w Ciscu")
+                .coordinate(new Coordinate(49.602314f,19.1039972f))
+                .profile(new ProfileBuilder().builder().setValue(Const.A_FOOTBALL, 6).build().getProfile())
+                .date(432432L)
+                .build();
+        Event event_w_zywcu = Event.builder()
+                .title("Event w Zywcu")
+                .coordinate(new Coordinate(49.698949f, 19.182259f))
+                .build();
+
+        eventService.saveAll(event_w_gorce, event_w_zywcu, event_w_ciscu).subscribe();
     }
 }
